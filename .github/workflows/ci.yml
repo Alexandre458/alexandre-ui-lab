@@ -22,6 +22,13 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
+      - name: Reject private AI instructions in public checkout
+        shell: bash
+        run: |
+          if [[ -e AGENTS.md || -e CLAUDE.md || -e DESENVOLVER.md || -e .ai-private ]]; then
+            echo 'Private AI instructions found in public checkout' >&2
+            exit 1
+          fi
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
       - name: Lint

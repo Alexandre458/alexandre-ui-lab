@@ -9,4 +9,6 @@ coverage/
 .env.*.local
 .ai-private/
 DESENVOLVER.md
+AGENTS.md
+CLAUDE.md
 *.tsbuildinfo
