@@ -1,0 +1,98 @@
+name: Production Deploy
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: ui-lab-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production
+    env:
+      SHA: ${{ github.event.workflow_run.head_sha }}
+      VPS_HOST: ${{ secrets.VPS_HOST }}
+      VPS_SSH_PORT: ${{ secrets.VPS_SSH_PORT }}
+      VPS_USER: ${{ secrets.VPS_USER }}
+      VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+      VPS_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+      APP_ROOT: /var/lib/docker/volumes/nginx-proxy-manager_npm_data/_data/ui-lab
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+      - name: Confirm deployment inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$SHA" =~ ^[a-f0-9]{40}$ ]]
+          [[ "$VPS_HOST" =~ ^[A-Za-z0-9.-]+$ ]]
+          [[ "$VPS_SSH_PORT" =~ ^[0-9]{1,5}$ ]]
+          [[ "$VPS_USER" =~ ^[a-z_][a-z0-9_-]*$ ]]
+          [[ -n "$VPS_SSH_KEY" && -n "$VPS_KNOWN_HOSTS" ]]
+      - name: Check current main
+        id: freshness
+        shell: bash
+        run: |
+          set -euo pipefail
+          latest="$(git ls-remote https://github.com/Alexandre458/alexandre-ui-lab.git refs/heads/main | cut -f1)"
+          [[ "$latest" =~ ^[a-f0-9]{40}$ ]]
+          if [[ "$latest" == "$SHA" ]]; then
+            echo 'deploy=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'A newer commit is already on main; skipping this release.'
+            echo 'deploy=false' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Download CI artifact
+        if: steps.freshness.outputs.deploy == 'true'
+        uses: actions/download-artifact@v7
+        with:
+          name: site-${{ github.event.workflow_run.head_sha }}
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: site
+      - name: Prepare SSH
+        if: steps.freshness.outputs.deploy == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          install -d -m 700 "$RUNNER_TEMP/ui-lab-ssh"
+          printf '%s\n' "$VPS_SSH_KEY" > "$RUNNER_TEMP/ui-lab-ssh/id_ed25519"
+          printf '%s\n' "$VPS_KNOWN_HOSTS" > "$RUNNER_TEMP/ui-lab-ssh/known_hosts"
+          chmod 600 "$RUNNER_TEMP/ui-lab-ssh/id_ed25519" "$RUNNER_TEMP/ui-lab-ssh/known_hosts"
+          ssh-keygen -y -f "$RUNNER_TEMP/ui-lab-ssh/id_ed25519" > /dev/null
+      - name: Upload release and activate
+        if: steps.freshness.outputs.deploy == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ssh_opts="-p $VPS_SSH_PORT -i $RUNNER_TEMP/ui-lab-ssh/id_ed25519 -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$RUNNER_TEMP/ui-lab-ssh/known_hosts"
+          target="$VPS_USER@$VPS_HOST"
+          ssh $ssh_opts "$target" "mkdir -p '$APP_ROOT/releases/$SHA'"
+          rsync -az --chmod=D755,F644 -e "ssh $ssh_opts" site/ "$target:$APP_ROOT/releases/$SHA/"
+          rsync -az --chmod=F644 -e "ssh $ssh_opts" ops/activate-release.sh "$target:$APP_ROOT/activate-release.sh"
+          ssh $ssh_opts "$target" "bash '$APP_ROOT/activate-release.sh' '$SHA'"
+      - name: Remove temporary SSH material
+        if: always()
+        shell: bash
+        run: |
+          if [[ -d "$RUNNER_TEMP/ui-lab-ssh" ]]; then
+            rm -f "$RUNNER_TEMP/ui-lab-ssh/id_ed25519" "$RUNNER_TEMP/ui-lab-ssh/known_hosts"
+            rmdir "$RUNNER_TEMP/ui-lab-ssh"
+          fi

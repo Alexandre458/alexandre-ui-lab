@@ -1,0 +1,9 @@
+[Unit]
+Description=Renovar somente o certificado do Alexandre UI Lab
+Requires=docker.service
+After=docker.service
+ConditionPathExists=/var/lib/docker/volumes/nginx-proxy-manager_npm_letsencrypt/_data/renewal/ui.alexandresilva.dev.conf
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/docker exec nginx-proxy-manager certbot renew --cert-name ui.alexandresilva.dev --quiet --deploy-hook "nginx -s reload"

@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7.0.0
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Lint
+        run: npm run lint
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Unit tests
+        run: npm test
+      - name: Browser tests
+        run: npm run test:e2e
+      - name: Production build
+        run: npm run build
+      - name: Exported site browser tests
+        run: npm run test:static
+      - name: Verify public artifact privacy
+        shell: bash
+        run: |
+          if grep -RIlE '\.ai-private|DAILY-WORKFLOW|PROGRESS\.md|prompts/0001|CHALLENGE-MATRIX' out; then
+            echo 'Private material found in public artifact' >&2
+            exit 1
+          fi
+          test -f out/index.html
+          test -f out/preview/buttons/confirmation-button/index.html
+      - name: Upload verified site
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: site-${{ github.sha }}
+          path: out/
+          if-no-files-found: error
+          retention-days: 3
