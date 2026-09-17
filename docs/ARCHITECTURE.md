@@ -11,6 +11,8 @@ O Registry é uma lista de objetos tipados em `src/registry/entries.ts`. Busca e
 - `/[category]/[slug]/`: detalhe com controles de viewport e informação técnica secundária.
 - `/preview/[category]/[slug]/`: interface real, também aberta em tela cheia.
 
+O cabeçalho usa o símbolo AOS e credita Alexandre Oliveira da Silva. `src/app/icon.svg`, `favicon.ico` e `apple-icon.png` usam a mesma marca do site principal e dos cinco sistemas do portfólio. As cópias ficam neste repositório independente; o build não lê arquivos dos demais projetos.
+
 Todas as rotas dinâmicas usam `generateStaticParams`. `next build` exporta HTML, CSS e JS para `out/`. O site não usa runtime de API, cookies, Server Actions nem dados por requisição. Se uma demo futura precisar dessas capacidades, reavalie esta arquitetura antes de implementá-la.
 
 ## Isolamento e bundle

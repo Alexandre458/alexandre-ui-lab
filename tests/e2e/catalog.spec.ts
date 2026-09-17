@@ -60,3 +60,14 @@ test("não há overflow horizontal na home e no detalhe", async ({ page }) => {
     expect(hasOverflow, `${route} transbordou`).toBe(false);
   }
 });
+
+test("marca AOS e favicon carregam em todos os tamanhos", async ({ page, request }) => {
+  await page.goto("/");
+  await expect(page.locator(".site-header .brand img")).toBeVisible();
+  const icon = page.locator('link[rel="icon"][href*="icon.svg"]');
+  await expect(icon).toHaveCount(1);
+  const href = await icon.getAttribute("href");
+  const response = await request.get(new URL(href!, page.url()).toString());
+  expect(response.status()).toBe(200);
+  expect(await response.text()).toContain("AOS");
+});

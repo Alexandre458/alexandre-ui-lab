@@ -4,6 +4,8 @@
 
 <h1 align="center">Alexandre UI Lab</h1>
 
+<p align="center">Uma criação de <strong>Alexandre Oliveira da Silva</strong>, com a marca AOS compartilhada pelos projetos do portfólio.</p>
+
 <p align="center">
   <strong>Ideias ganham forma aqui.</strong><br>
   Um catálogo de interfaces para explorar, testar e adaptar a projetos reais.

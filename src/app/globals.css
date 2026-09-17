@@ -53,3 +53,5 @@ a { color:inherit; text-decoration:none; }
 @media(prefers-reduced-motion:reduce) { *,*::before,*::after {scroll-behavior:auto!important;transition:none!important;animation:none!important;} }
 body:has(.demo-stage) > .shell {display:none;}
 body:has(.demo-stage) {background:#fff;}
+
+.brand-mark{display:block;flex:none;background:transparent}.brand-copy{display:grid;gap:2px;line-height:1.1}.brand-copy small{font-size:.63rem;font-weight:600;letter-spacing:.01em;color:var(--muted)}@media(max-width:560px){.brand-copy small{font-size:.55rem}}
