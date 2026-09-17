@@ -6,4 +6,4 @@ O deploy usa um usuário SSH dedicado, envia o artifact para uma release nomeada
 
 O site é servido como arquivos estáticos pelo Nginx. Não há processo Node nem porta interna da aplicação. A configuração de Nginx versionada está em `ops/nginx/`. As credenciais de SSH e a chave de host verificada são armazenadas no GitHub Environment `production`, nunca no repositório.
 
-O Environment `production` restringe o deploy à branch `main` e guarda os cinco secrets necessários. A primeira publicação automática ocorreu em 2026-09-17 a partir do commit `90c52460f0fec0d6b15c8116909917b38d23e568`; o CI e o workflow de deploy passaram. O workflow falha explicitamente se faltar algum secret. Não publique artifacts manualmente para substituir o fluxo de CI/deploy.
+O Environment `production` restringe o deploy à branch `main` e guarda os cinco secrets necessários. A primeira publicação automática ocorreu em 2026-09-17 pelo fluxo CI → Production Deploy. O workflow falha explicitamente se faltar algum secret. Não publique artifacts manualmente para substituir o fluxo de CI/deploy.
