@@ -1,0 +1,11 @@
+[Unit]
+Description=Verificar renovação TLS do Alexandre UI Lab diariamente
+
+[Timer]
+OnCalendar=*-*-* 04:37:00
+RandomizedDelaySec=2h
+Persistent=true
+Unit=ui-lab-cert-renew.service
+
+[Install]
+WantedBy=timers.target

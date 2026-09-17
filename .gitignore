@@ -1,0 +1,12 @@
+node_modules/
+.next/
+out/
+playwright-report/
+test-results/
+coverage/
+.env
+.env.local
+.env.*.local
+.ai-private/
+DESENVOLVER.md
+*.tsbuildinfo
