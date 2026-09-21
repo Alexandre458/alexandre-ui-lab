@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 test("catálogo, busca, filtros e navegação", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { name: /Ideias ganham forma aqui/i })).toBeVisible();
-  await expect(page.locator(".demo-card")).toHaveCount(7);
+  await expect(page.locator(".demo-card")).toHaveCount(8);
   const exampleCount = await page.locator(".demo-card").count();
   const categoryCount = await page.locator(".category-links a").count();
   await expect(page.locator(".stats > div").nth(0).locator("strong")).toHaveText(String(exampleCount).padStart(2, "0"));
@@ -39,7 +39,7 @@ test("catálogo, busca, filtros e navegação", async ({ page }) => {
   await expect(page.getByRole("link", { name: /tela cheia/i })).toHaveAttribute("href", /\/preview\/buttons\/confirmation-button\//);
 });
 
-test("sete previews executam interações reais", async ({ page }) => {
+test("oito previews executam interações reais", async ({ page }) => {
   await page.goto("/preview/buttons/confirmation-button/");
   await page.getByRole("button", { name: /Confirmar ação/ }).click();
   await expect(page.getByRole("button", { name: /Confirmado/ })).toBeVisible();
@@ -65,6 +65,11 @@ test("sete previews executam interações reais", async ({ page }) => {
   await expect(page.getByRole("progressbar")).toBeVisible();
   await expect(page.getByRole("heading", { name: /Pedido confirmado/i })).toBeVisible({ timeout: 10000 });
   await expect(page.getByText(/Referência:/)).toBeVisible();
+  await page.goto("/preview/fundamentals/contextual-action-environmental/");
+  await page.getByRole("button", { name: /Analisar indicador/ }).first().click();
+  await expect(page.getByRole("progressbar")).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Análise concluída/i })).toBeVisible({ timeout: 10000 });
+  await expect(page.getByText(/às/)).toBeVisible();
 });
 
 test("não há overflow horizontal na home e no detalhe", async ({ page }) => {
