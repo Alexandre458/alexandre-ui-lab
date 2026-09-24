@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 test("catálogo, busca, filtros e navegação", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { name: /Ideias ganham forma aqui/i })).toBeVisible();
-  await expect(page.locator(".demo-card")).toHaveCount(10);
+  await expect(page.locator(".demo-card")).toHaveCount(11);
   const exampleCount = await page.locator(".demo-card").count();
   const categoryCount = await page.locator(".category-links a").count();
   await expect(page.locator(".stats > div").nth(0).locator("strong")).toHaveText(String(exampleCount).padStart(2, "0"));
@@ -80,6 +80,14 @@ test("oito previews executam interações reais", async ({ page }) => {
   await expect(page.getByRole("progressbar")).toBeVisible();
   await expect(page.getByRole("heading", { name: /Deploy Confirmado/i })).toBeVisible({ timeout: 10000 });
   await expect(page.getByText(/Deploy ID:/)).toBeVisible();
+  await page.goto("/preview/fundamentals/assisted-field-preventive-clinic/");
+  await page.getByRole("textbox", { name: "Nome Completo" }).fill("Ana Paula Silva");
+  await expect(page.getByText("Cadastro completo")).toBeVisible();
+  await page.getByRole("textbox", { name: "CPF" }).fill("12345678900");
+  await expect(page.getByText("CPF validado")).toBeVisible();
+  await page.locator("#preventive-date").fill("2027-03-15");
+  await expect(page.getByText("Data confirmada")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Confirmar Agendamento" })).toBeEnabled();
 });
 
 test("não há overflow horizontal na home e no detalhe", async ({ page }) => {

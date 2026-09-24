@@ -19,5 +19,8 @@ test("busca localiza IDs, descrição, categoria e tags", () => {
   assert.equal(searchEntries("cultural").some(entry => entry.id === "FUND-0009"), true);
   assert.equal(searchEntries("FUND-0010")[0]?.id, "FUND-0010");
   assert.equal(searchEntries("software").some(entry => entry.id === "FUND-0010"), true);
-  assert.deepEqual(searchEntries("login", "buttons"), []);
+  assert.equal(searchEntries("FUND-0011")[0]?.id, "FUND-0011");
+  assert.equal(searchEntries("clínica").some(entry => entry.id === "FUND-0011"), true);
+  assert.equal(searchEntries("CPF").some(entry => entry.id === "FUND-0011"), true);
+  assert.deepEqual(searchEntries("clínica", "buttons"), []);
 });
