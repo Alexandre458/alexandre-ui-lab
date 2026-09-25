@@ -14,6 +14,7 @@ const demos = {
   "FUND-0009": dynamic(() => import("@/demos/fundamentals/contextual-action-cultural-producer"), { ssr: false, loading: () => <div className="demo-loading" role="status">Carregando demonstração…</div> }),
   "FUND-0010": dynamic(() => import("@/demos/fundamentals/contextual-action-software-team"), { ssr: false, loading: () => <div className="demo-loading" role="status">Carregando demonstração…</div> }),
   "FUND-0011": dynamic(() => import("@/demos/fundamentals/assisted-field-preventive-clinic"), { ssr: false, loading: () => <div className="demo-loading" role="status">Carregando demonstração…</div> }),
+  "FUND-0012": dynamic(() => import("@/demos/fundamentals/assisted-field-architecture-studio"), { ssr: false, loading: () => <div className="demo-loading" role="status">Carregando demonstração…</div> }),
 };
 
 export function PreviewDemo({ id }: { id: string }) { const Component = demos[id as keyof typeof demos]; return Component ? <Component /> : null; }
