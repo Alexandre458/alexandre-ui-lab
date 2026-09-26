@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 test("catálogo, busca, filtros e navegação", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { name: /Ideias ganham forma aqui/i })).toBeVisible();
-  await expect(page.locator(".demo-card")).toHaveCount(12);
+  await expect(page.locator(".demo-card")).toHaveCount(13);
   const exampleCount = await page.locator(".demo-card").count();
   const categoryCount = await page.locator(".category-links a").count();
   await expect(page.locator(".stats > div").nth(0).locator("strong")).toHaveText(String(exampleCount).padStart(2, "0"));
@@ -101,6 +101,16 @@ test("oito previews executam interações reais", async ({ page }) => {
   await page.locator("#arch-visit-date").fill("2027-06-20");
   await expect(page.getByText("Data confirmada")).toBeVisible();
   await expect(page.getByRole("button", { name: "Solicitar Projeto" })).toBeEnabled();
+  await page.goto("/preview/fundamentals/assisted-field-financial-platform/");
+  await page.getByRole("textbox", { name: "Descrição" }).fill("Salário mensal");
+  await expect(page.getByText("Descrição registrada")).toBeVisible();
+  await page.getByRole("textbox", { name: "Valor" }).fill("5000");
+  await expect(page.getByText("Valor validado")).toBeVisible();
+  await page.getByRole("combobox", { name: "Categoria" }).selectOption({ label: "Receita" });
+  await expect(page.getByText("Categoria selecionada")).toBeVisible();
+  await page.locator("#fin-date").fill("2026-09-01");
+  await expect(page.getByText("Data confirmada")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Registrar Transação" })).toBeEnabled();
 });
 
 test("não há overflow horizontal na home e no detalhe", async ({ page }) => {
