@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 test("catálogo, busca, filtros e navegação", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { name: /Ideias ganham forma aqui/i })).toBeVisible();
-  await expect(page.locator(".demo-card")).toHaveCount(13);
+  await expect(page.locator(".demo-card")).toHaveCount(14);
   const exampleCount = await page.locator(".demo-card").count();
   const categoryCount = await page.locator(".category-links a").count();
   await expect(page.locator(".stats > div").nth(0).locator("strong")).toHaveText(String(exampleCount).padStart(2, "0"));
@@ -111,6 +111,16 @@ test("oito previews executam interações reais", async ({ page }) => {
   await page.locator("#fin-date").fill("2026-09-01");
   await expect(page.getByText("Data confirmada")).toBeVisible();
   await expect(page.getByRole("button", { name: "Registrar Transação" })).toBeEnabled();
+  await page.goto("/preview/fundamentals/assisted-field-reading-community/");
+  await page.getByRole("textbox", { name: "Título do livro" }).fill("Dom Casmurro");
+  await expect(page.getByText("Título registrado")).toBeVisible();
+  await page.getByRole("textbox", { name: "Autor" }).fill("Machado de Assis");
+  await expect(page.getByText("Autor validado")).toBeVisible();
+  await page.getByRole("radio", { name: "5 estrelas" }).click();
+  await expect(page.getByText("Avaliação registrada")).toBeVisible();
+  await page.getByRole("textbox", { name: "Anotações" }).fill("Um clássico da literatura brasileira que explora a ambiguidade e o ciúme.");
+  await expect(page.getByText("Anotações salvas")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Compartilhar Leitura" })).toBeEnabled();
 });
 
 test("não há overflow horizontal na home e no detalhe", async ({ page }) => {
