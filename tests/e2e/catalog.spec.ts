@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 test("catálogo, busca, filtros e navegação", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { name: /Ideias ganham forma aqui/i })).toBeVisible();
-  await expect(page.locator(".demo-card")).toHaveCount(14);
+  await expect(page.locator(".demo-card")).toHaveCount(15);
   const exampleCount = await page.locator(".demo-card").count();
   const categoryCount = await page.locator(".category-links a").count();
   await expect(page.locator(".stats > div").nth(0).locator("strong")).toHaveText(String(exampleCount).padStart(2, "0"));
@@ -121,6 +121,16 @@ test("oito previews executam interações reais", async ({ page }) => {
   await page.getByRole("textbox", { name: "Anotações" }).fill("Um clássico da literatura brasileira que explora a ambiguidade e o ciúme.");
   await expect(page.getByText("Anotações salvas")).toBeVisible();
   await expect(page.getByRole("button", { name: "Compartilhar Leitura" })).toBeEnabled();
+  await page.goto("/preview/fundamentals/assisted-field-mobility-brand/");
+  await page.getByLabel("Origem").fill("Praça Central");
+  await expect(page.getByText("Origem definida")).toBeVisible();
+  await page.getByLabel("Destino").fill("Parque das Fontes");
+  await expect(page.getByText("Destino definido")).toBeVisible();
+  await page.getByLabel("Distância da rota (km)").fill("4,5");
+  await expect(page.getByText("Distância válida")).toBeVisible();
+  await page.getByRole("radio", { name: /EcoCar/ }).click();
+  await expect(page.getByText(/Tempo estimado/)).toBeVisible();
+  await expect(page.getByRole("button", { name: "Planejar rota" })).toBeEnabled();
 });
 
 test("não há overflow horizontal na home e no detalhe", async ({ page }) => {
