@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 test("catálogo, busca, filtros e navegação", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { name: /Ideias ganham forma aqui/i })).toBeVisible();
-  await expect(page.locator(".demo-card")).toHaveCount(15);
+  await expect(page.locator(".demo-card")).toHaveCount(16);
   const exampleCount = await page.locator(".demo-card").count();
   const categoryCount = await page.locator(".category-links a").count();
   await expect(page.locator(".stats > div").nth(0).locator("strong")).toHaveText(String(exampleCount).padStart(2, "0"));
@@ -131,6 +131,17 @@ test("oito previews executam interações reais", async ({ page }) => {
   await page.getByRole("radio", { name: /EcoCar/ }).click();
   await expect(page.getByText(/Tempo estimado/)).toBeVisible();
   await expect(page.getByRole("button", { name: "Planejar rota" })).toBeEnabled();
+  await page.goto("/preview/fundamentals/assisted-field-creative-school/");
+  await page.getByRole("textbox", { name: "Nome do estudante" }).fill("Marina Costa");
+  await expect(page.getByText("Nome registrado")).toBeVisible();
+  await page.getByRole("combobox", { name: "Trilha de aulas" }).selectOption({ label: "Ilustração — Aquarela, digital e editorial" });
+  await expect(page.getByText("Trilha selecionada")).toBeVisible();
+  await page.getByRole("slider", { name: "Meta de progresso" }).fill("6");
+  await expect(page.getByText("Meta de 6 módulos no semestre")).toBeVisible();
+  await expect(page.getByText("Matrícula pronta")).toBeVisible();
+  await page.getByRole("button", { name: "Confirmar matrícula" }).click();
+  await expect(page.getByText("Matrícula registrada")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Matrícula confirmada" })).toBeDisabled();
 });
 
 test("não há overflow horizontal na home e no detalhe", async ({ page }) => {
