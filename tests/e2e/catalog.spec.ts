@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 test("catálogo, busca, filtros e navegação", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { name: /Ideias ganham forma aqui/i })).toBeVisible();
-  await expect(page.locator(".demo-card")).toHaveCount(16);
+  await expect(page.locator(".demo-card")).toHaveCount(17);
   const exampleCount = await page.locator(".demo-card").count();
   const categoryCount = await page.locator(".category-links a").count();
   await expect(page.locator(".stats > div").nth(0).locator("strong")).toHaveText(String(exampleCount).padStart(2, "0"));
@@ -142,6 +142,16 @@ test("oito previews executam interações reais", async ({ page }) => {
   await page.getByRole("button", { name: "Confirmar matrícula" }).click();
   await expect(page.getByText("Matrícula registrada")).toBeVisible();
   await expect(page.getByRole("button", { name: "Matrícula confirmada" })).toBeDisabled();
+  await page.goto("/preview/fundamentals/assisted-field-design-store/");
+  await page.getByRole("combobox", { name: "Coleção" }).selectOption({ label: "Cerâmica Objetos — Peças utilitárias" });
+  await expect(page.getByText("Coleção selecionada")).toBeVisible();
+  await page.getByRole("button", { name: "Aumentar quantidade" }).click();
+  await expect(page.getByText("2 itens", { exact: true })).toBeVisible();
+  await page.getByRole("radio", { name: /Expresso/ }).check();
+  await expect(page.getByText("R$ 417,00")).toBeVisible();
+  await page.getByRole("button", { name: "Confirmar pedido" }).click();
+  await expect(page.getByText("Pedido registrado")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Pedido confirmado" })).toBeDisabled();
 });
 
 test("não há overflow horizontal na home e no detalhe", async ({ page }) => {
