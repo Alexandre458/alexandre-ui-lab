@@ -21,10 +21,10 @@ test("busca localiza IDs, descrição, categoria e tags", () => {
   assert.equal(searchEntries("software").some(entry => entry.id === "FUND-0010"), true);
   assert.equal(searchEntries("FUND-0011")[0]?.id, "FUND-0011");
   assert.equal(searchEntries("clínica").some(entry => entry.id === "FUND-0011"), true);
-  assert.equal(searchEntries("CPF").some(entry => entry.id === "FUND-0011"), true);
+  assert.equal(searchEntries("horários").some(entry => entry.id === "FUND-0011"), true);
   assert.equal(searchEntries("FUND-0012")[0]?.id, "FUND-0012");
   assert.equal(searchEntries("arquitetura").some(entry => entry.id === "FUND-0012"), true);
-  assert.equal(searchEntries("materiais").some(entry => entry.id === "FUND-0012"), true);
+  assert.equal(searchEntries("áreas").some(entry => entry.id === "FUND-0012"), true);
   assert.equal(searchEntries("FUND-0013")[0]?.id, "FUND-0013");
   assert.equal(searchEntries("financeira").some(entry => entry.id === "FUND-0013"), true);
   assert.equal(searchEntries("transações").some(entry => entry.id === "FUND-0013"), true);
@@ -44,6 +44,10 @@ test("busca localiza IDs, descrição, categoria e tags", () => {
   assert.equal(searchEntries("FUND-0018")[0]?.id, "FUND-0018");
   assert.equal(searchEntries("ambiental").some(entry => entry.id === "FUND-0018"), true);
   assert.equal(searchEntries("acessibilidade").some(entry => entry.id === "FUND-0018"), true);
+  assert.equal(searchEntries("FUND-0019")[0]?.id, "FUND-0019");
+  assert.equal(searchEntries("bilheteria").some(entry => entry.id === "FUND-0019"), true);
+  assert.equal(searchEntries("produtora").some(entry => entry.id === "FUND-0019"), true);
+  assert.equal(searchEntries("eventos").some(entry => entry.id === "FUND-0019"), true);
   assert.deepEqual(searchEntries("mobilidade", "buttons"), []);
   assert.deepEqual(searchEntries("leitura", "buttons"), []);
   assert.deepEqual(searchEntries("financeira", "buttons"), []);

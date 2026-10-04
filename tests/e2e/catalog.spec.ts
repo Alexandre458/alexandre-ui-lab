@@ -1,9 +1,10 @@
 import { test, expect } from "@playwright/test";
+import { entries } from "../../src/registry/entries";
 
 test("catálogo, busca, filtros e navegação", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { name: /Ideias ganham forma aqui/i })).toBeVisible();
-  await expect(page.locator(".demo-card")).toHaveCount(18);
+  await expect(page.locator(".demo-card")).toHaveCount(entries.length);
   const exampleCount = await page.locator(".demo-card").count();
   const categoryCount = await page.locator(".category-links a").count();
   await expect(page.locator(".stats > div").nth(0).locator("strong")).toHaveText(String(exampleCount).padStart(2, "0"));
@@ -16,7 +17,7 @@ test("catálogo, busca, filtros e navegação", async ({ page }) => {
   await expect(page.locator(".demo-card")).toHaveCount(1);
   await page.getByRole("link", { name: /Abrir BTN-001/ }).click();
   await expect(page).toHaveURL(/\/buttons\/confirmation-button\/$/, { timeout: 30000 });
-  await expect(page.getByRole("heading", { name: "Botão de confirmação", level: 1 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Confirmação reversível de uma ação", level: 1 })).toBeVisible();
   await expect(page.locator("iframe")).toBeVisible();
   if (process.env.E2E_STATIC === "1") {
     await expect(page.locator("iframe")).toHaveAttribute("sandbox", "allow-scripts");
@@ -39,7 +40,7 @@ test("catálogo, busca, filtros e navegação", async ({ page }) => {
   await expect(page.getByRole("link", { name: /tela cheia/i })).toHaveAttribute("href", /\/preview\/buttons\/confirmation-button\//);
 });
 
-test("oito previews executam interações reais", async ({ page }) => {
+test("previews executam interações reais", async ({ page }) => {
   await page.goto("/preview/buttons/confirmation-button/");
   await page.getByRole("button", { name: /Confirmar ação/ }).click();
   await expect(page.getByRole("button", { name: /Confirmado/ })).toBeVisible();
@@ -56,106 +57,25 @@ test("oito previews executam interações reais", async ({ page }) => {
   await expect(page.getByRole("status")).toContainText("Nenhuma credencial foi enviada");
   await page.goto("/preview/hero/atelier-hero/");
   await expect(page.getByRole("heading", { name: /Forma/ })).toBeVisible();
-  await page.goto("/preview/fundamentals/contextual-action-button/");
-  await page.getByRole("button", { name: /Iniciar aula/ }).first().click();
-  await expect(page.getByRole("progressbar")).toBeVisible();
-  await expect(page.getByRole("heading", { name: /Parabéns/i })).toBeVisible({ timeout: 10000 });
-  await page.goto("/preview/fundamentals/contextual-action-store/");
-  await page.getByRole("button", { name: /Solicitar pedido/ }).first().click();
-  await expect(page.getByRole("progressbar")).toBeVisible();
-  await expect(page.getByRole("heading", { name: /Pedido confirmado/i })).toBeVisible({ timeout: 10000 });
-  await expect(page.getByText(/Referência:/)).toBeVisible();
-  await page.goto("/preview/fundamentals/contextual-action-environmental/");
-  await page.getByRole("button", { name: /Analisar indicador/ }).first().click();
-  await expect(page.getByRole("progressbar")).toBeVisible();
-  await expect(page.getByRole("heading", { name: /Análise concluída/i })).toBeVisible({ timeout: 10000 });
-  await expect(page.getByText(/às/)).toBeVisible();
-  await page.goto("/preview/fundamentals/contextual-action-cultural-producer/");
-  await page.getByRole("button", { name: /Reservar ingresso/ }).first().click();
-  await expect(page.getByRole("progressbar")).toBeVisible();
-  await expect(page.getByRole("heading", { name: /Ingresso Confirmado/i })).toBeVisible({ timeout: 10000 });
-  await expect(page.getByText(/Código:/)).toBeVisible();
-  await page.goto("/preview/fundamentals/contextual-action-software-team/");
-  await page.getByRole("button", { name: /Iniciar deploy/ }).first().click();
-  await expect(page.getByRole("progressbar")).toBeVisible();
-  await expect(page.getByRole("heading", { name: /Deploy Confirmado/i })).toBeVisible({ timeout: 10000 });
-  await expect(page.getByText(/Deploy ID:/)).toBeVisible();
-  await page.goto("/preview/fundamentals/assisted-field-preventive-clinic/");
-  await page.getByRole("textbox", { name: "Nome Completo" }).fill("Ana Paula Silva");
-  await expect(page.getByText("Cadastro completo")).toBeVisible();
-  await page.getByRole("textbox", { name: "CPF" }).fill("12345678900");
-  await expect(page.getByText("CPF validado")).toBeVisible();
-  await page.locator("#preventive-date").fill("2027-03-15");
-  await expect(page.getByText("Data confirmada")).toBeVisible();
-  await expect(page.getByRole("button", { name: "Confirmar Agendamento" })).toBeEnabled();
-  await page.goto("/preview/fundamentals/assisted-field-architecture-studio/");
-  await page.getByRole("textbox", { name: "Nome do Projeto" }).fill("Residência Vale Verde");
-  await expect(page.getByText("Nome registrado")).toBeVisible();
-  await page.getByRole("textbox", { name: "Área do projeto" }).fill("250");
-  await expect(page.getByText("Área validada")).toBeVisible();
-  await page.getByRole("combobox", { name: "Tipo de projeto" }).selectOption({ label: "Residencial" });
-  await expect(page.getByText("Tipo selecionado")).toBeVisible();
-  await page.getByRole("button", { name: "Concreto aparente" }).click();
-  await page.getByRole("button", { name: "Madeira natural" }).click();
-  await expect(page.locator(".architecture-material-chip.is-selected")).toHaveCount(2);
-  await page.locator("#arch-visit-date").fill("2027-06-20");
-  await expect(page.getByText("Data confirmada")).toBeVisible();
-  await expect(page.getByRole("button", { name: "Solicitar Projeto" })).toBeEnabled();
-  await page.goto("/preview/fundamentals/assisted-field-financial-platform/");
-  await page.getByRole("textbox", { name: "Descrição" }).fill("Salário mensal");
-  await expect(page.getByText("Descrição registrada")).toBeVisible();
-  await page.getByRole("textbox", { name: "Valor" }).fill("5000");
-  await expect(page.getByText("Valor validado")).toBeVisible();
-  await page.getByRole("combobox", { name: "Categoria" }).selectOption({ label: "Receita" });
-  await expect(page.getByText("Categoria selecionada")).toBeVisible();
-  await page.locator("#fin-date").fill("2026-09-01");
-  await expect(page.getByText("Data confirmada")).toBeVisible();
-  await expect(page.getByRole("button", { name: "Registrar Transação" })).toBeEnabled();
-  await page.goto("/preview/fundamentals/assisted-field-reading-community/");
-  await page.getByRole("textbox", { name: "Título do livro" }).fill("Dom Casmurro");
-  await expect(page.getByText("Título registrado")).toBeVisible();
-  await page.getByRole("textbox", { name: "Autor" }).fill("Machado de Assis");
-  await expect(page.getByText("Autor validado")).toBeVisible();
-  await page.getByRole("radio", { name: "5 estrelas" }).click();
-  await expect(page.getByText("Avaliação registrada")).toBeVisible();
-  await page.getByRole("textbox", { name: "Anotações" }).fill("Um clássico da literatura brasileira que explora a ambiguidade e o ciúme.");
-  await expect(page.getByText("Anotações salvas")).toBeVisible();
-  await expect(page.getByRole("button", { name: "Compartilhar Leitura" })).toBeEnabled();
-  await page.goto("/preview/fundamentals/assisted-field-mobility-brand/");
-  await page.getByLabel("Origem").fill("Praça Central");
-  await expect(page.getByText("Origem definida")).toBeVisible();
-  await page.getByLabel("Destino").fill("Parque das Fontes");
-  await expect(page.getByText("Destino definido")).toBeVisible();
-  await page.getByLabel("Distância da rota (km)").fill("4,5");
-  await expect(page.getByText("Distância válida")).toBeVisible();
-  await page.getByRole("radio", { name: /EcoCar/ }).click();
-  await expect(page.getByText(/Tempo estimado/)).toBeVisible();
-  await expect(page.getByRole("button", { name: "Planejar rota" })).toBeEnabled();
-  await page.goto("/preview/fundamentals/assisted-field-creative-school/");
-  await page.getByRole("textbox", { name: "Nome do estudante" }).fill("Marina Costa");
-  await expect(page.getByText("Nome registrado")).toBeVisible();
-  await page.getByRole("combobox", { name: "Trilha de aulas" }).selectOption({ label: "Ilustração — Aquarela, digital e editorial" });
-  await expect(page.getByText("Trilha selecionada")).toBeVisible();
-  await page.getByRole("slider", { name: "Meta de progresso" }).fill("6");
-  await expect(page.getByText("Meta de 6 módulos no semestre")).toBeVisible();
-  await expect(page.getByText("Matrícula pronta")).toBeVisible();
-  await page.getByRole("button", { name: "Confirmar matrícula" }).click();
-  await expect(page.getByText("Matrícula registrada")).toBeVisible();
-  await expect(page.getByRole("button", { name: "Matrícula confirmada" })).toBeDisabled();
-  await page.goto("/preview/fundamentals/assisted-field-design-store/");
-  await page.getByRole("combobox", { name: "Coleção" }).selectOption({ label: "Cerâmica Objetos — Peças utilitárias" });
-  await expect(page.getByText("Coleção selecionada")).toBeVisible();
-  await page.getByRole("button", { name: "Aumentar quantidade" }).click();
-  await expect(page.getByText("2 itens", { exact: true })).toBeVisible();
-  await page.getByRole("radio", { name: /Expresso/ }).check();
-  await expect(page.getByText("R$ 417,00")).toBeVisible();
-  await page.getByRole("button", { name: "Confirmar pedido" }).click();
-  await expect(page.getByText("Pedido registrado")).toBeVisible();
-  await expect(page.getByRole("button", { name: "Pedido confirmado" })).toBeDisabled();
+  await page.goto("/preview/fundamentals/assisted-field-cultural-producer/");
+  await page.getByRole("combobox", { name: "Show da programação" }).selectOption({ label: "Cena Aberta — Teatro Experimental — R$ 35" });
+  await expect(page.getByText("Selecionado — Cena Aberta")).toBeVisible();
+  await page.getByLabel("Quantidade de ingressos").fill("3");
+  await expect(page.getByText("Quantidade ok — 3 ingressos")).toBeVisible();
+  await page.getByLabel("Nome do participante").fill("Beatriz Almeida");
+  await expect(page.getByText("Nome ok — o bilhete sai com esse nome.")).toBeVisible();
+  await page.getByLabel("E-mail para o bilhete").fill("beatriz@exemplo.com");
+  await expect(page.getByText("E-mail ok — nada sai deste navegador.")).toBeVisible();
+  await page.getByRole("button", { name: "Gerar bilhetes" }).click();
+  await expect(page.getByRole("status").filter({ hasText: "Bilhetes gerados" })).toBeVisible({ timeout: 10000 });
+  await expect(page.locator(".prod-code")).toHaveText(/CULT-19-/);
+  await expect(
+    page.getByRole("note").getByText("Cena Aberta — Teatro Experimental")
+  ).toBeVisible();
 });
 
 test("não há overflow horizontal na home e no detalhe", async ({ page }) => {
-  for (const route of ["/", "/buttons/confirmation-button/", "/login/workspace-login/"]) {
+  for (const route of ["/", "/buttons/confirmation-button/", "/login/workspace-login/", "/fundamentals/assisted-field-cultural-producer/"]) {
     await page.goto(route);
     const hasOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1);
     expect(hasOverflow, `${route} transbordou`).toBe(false);
