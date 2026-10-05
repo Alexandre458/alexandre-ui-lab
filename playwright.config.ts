@@ -4,7 +4,7 @@ export default defineConfig({
   testDir: "./tests/e2e",
   timeout: 60000,
   workers: 1,
-  use: { baseURL: "http://127.0.0.1:4317", trace: "retain-on-failure" },
+  use: { baseURL: "http://127.0.0.1:4317", trace: "retain-on-failure", ...(process.env.E2E_CHROMIUM_PATH ? { launchOptions: { executablePath: process.env.E2E_CHROMIUM_PATH } } : {}) },
   projects: [
     { name: "desktop", use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 900 } } },
     { name: "tablet", use: { ...devices["Desktop Chrome"], viewport: { width: 768, height: 1024 } } },
@@ -16,4 +16,6 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI && process.env.E2E_STATIC !== "1",
     timeout: 120000,
   },
+  // no Windows o next dev pode cair no meio da suíte longa; garantimos a porta 4317 livre para o próximo ciclo
+  globalTeardown: "./tests/teardown-e2e.mjs",
 });

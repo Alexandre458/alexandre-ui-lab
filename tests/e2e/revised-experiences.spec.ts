@@ -325,6 +325,27 @@ test("0018 valida unidade e limpa leitura ao mudar iniciativa no iframe", async 
   }
 });
 
+test("0020 normaliza o nome, avisa colisão e restaura a fixture ao reiniciar", async ({ page }) => {
+  const entry = entries.find(item => item.challengeNumber === 20)!;
+  await page.goto(entryHref(entry));
+  const frame = page.frameLocator("iframe");
+  await expect(frame.locator(".branch-codigo")).toContainText("feature/minha-tela");
+  await frame.getByRole("textbox", { name: "Nome" }).fill("Login");
+  await frame.getByRole("button", { name: "fix/", exact: true }).click();
+  await expect(frame.getByRole("textbox", { name: "Nome" })).toHaveAttribute("aria-invalid", "true");
+  await expect(frame.getByRole("button", { name: /Corrigir para fix\/login/ })).toBeVisible();
+  await frame.getByRole("button", { name: /Corrigir para fix\/login/ }).click();
+  await expect(frame.locator(".branch-codigo")).toContainText("fix/login-novo");
+  await expect(frame.getByRole("status")).toBeFocused();
+  await frame.getByRole("button", { name: /Começar de novo/ }).click();
+  await expect(frame.getByRole("textbox", { name: "Nome" })).toHaveValue("Minha Tela");
+  await expect(frame.locator(".branch-codigo")).toContainText("feature/minha-tela");
+  await frame.getByRole("textbox", { name: "Nome" }).fill("Main");
+  await expect(frame.getByRole("button", { name: "feature/", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await expect(frame.getByRole("textbox", { name: "Nome" })).toHaveAttribute("aria-invalid", "true");
+  await expect(frame.locator(".branch-descricao")).toContainText("reservado");
+});
+
 test("todos os exemplos carregam em detalhe e iframe sem overflow ou erro", async ({ page }) => {
   test.setTimeout(180000);
   const failures: string[] = [];

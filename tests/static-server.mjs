@@ -29,9 +29,16 @@ createServer((request, response) => {
     return;
   }
   const file = pathname.endsWith("/") ? join(candidate, "index.html") : candidate;
+  let st;
   try {
-    if (!statSync(file).isFile()) throw new Error("Not a file");
-  } catch {
+    st = statSync(file);
+  } catch (erro) {
+    // ENOENT = arquivo realmente ausente; EMFILE/ESTALE etc. são transitórios (navegações abortadas)
+    if (erro.code === "ENOENT") response.writeHead(404).end();
+    else response.writeHead(503, { "Retry-After": "1" }).end();
+    return;
+  }
+  if (!st.isFile()) {
     response.writeHead(404).end();
     return;
   }
@@ -40,5 +47,14 @@ createServer((request, response) => {
     "Content-Type": mime[extname(file)] ?? "application/octet-stream",
     "X-Content-Type-Options": "nosniff",
   });
-  createReadStream(file).pipe(response);
+  // Navegações interrompidas (Playwright troca de página) abortam a resposta:
+  // sem destruir o read stream, cada interrupção vaza um handle e o processo
+  // acaba com EMFILE, traduzido por 404s em páginas válidas.
+  const stream = createReadStream(file);
+  request.on("close", () => {
+    if (!response.writableEnded) stream.destroy();
+  });
+  request.on("aborted", () => stream.destroy());
+  stream.on("error", () => response.destroy());
+  stream.pipe(response);
 }).listen(4317, "127.0.0.1");

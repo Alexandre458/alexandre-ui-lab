@@ -57,6 +57,7 @@ Cada exemplo tem uma página própria, uma prévia interativa e acesso ao códig
 | [FUND-0017](https://ui.alexandresilva.dev/fundamentals/assisted-field-design-store/) | Pedido de coleção com decomposição de preço | Calcular subtotal por quantidade, separar adicional de entrega e congelar o pedido confirmado até revisão. |
 | [FUND-0018](https://ui.alexandresilva.dev/fundamentals/campos-assistidos-plataforma-ambiental/) | Leitura ambiental com unidade e meta | Validar leitura conforme a unidade da iniciativa e calcular percentual da meta sem manter valor de outra iniciativa. |
 | [FUND-0019](https://ui.alexandresilva.dev/fundamentals/assisted-field-cultural-producer/) | Bilheteria assistida com validação cruzada | Gerar bilhete nominal somente com evento, quantidade inteira elegível, nome e e-mail válidos. |
+| [FUND-0020](https://ui.alexandresilva.dev/fundamentals/editor-de-identificador-de-branch/) | Editor de identificador de branch com sandbox git | Normalizar prefixo e nome em tempo real, detectar nomes reservados e ramos locais em colisão, e corrigir sem impactar outro ramo. |
 
 As demonstrações usam dados fictícios e estado local. Cada experiência apresenta uma regra própria: pré-requisitos, estoque, base de comparação, lugares disponíveis, dependências de release, capacidade de agenda, áreas, centavos, spoilers, duração de trajetos ou limites de metas. Reiniciar restaura a fixture inicial; revisar permite corrigir escolhas. Login, reservas, lançamentos, leituras, pedidos e bilhetes não enviam dados a serviços reais.
 
