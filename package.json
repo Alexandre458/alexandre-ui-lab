@@ -9,7 +9,7 @@
     "typecheck": "tsc --noEmit",
     "test": "node --test tests/registry.test.mjs",
     "test:e2e": "playwright test",
-    "test:static": "E2E_STATIC=1 playwright test --project=desktop"
+    "test:static": "set E2E_STATIC=1 && playwright test --project=desktop"
   },
   "dependencies": {
     "lucide-react": "1.46.0",
