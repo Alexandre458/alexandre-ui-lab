@@ -24,6 +24,7 @@ const demos = {
   "FUND-0019": dynamic(() => import("@/demos/fundamentals/assisted-field-cultural-producer"), { ssr: false, loading: () => <div className="demo-loading" role="status">Carregando demonstração…</div> }),
   "FUND-0020": dynamic(() => import("@/demos/fundamentals/editor-de-identificador-de-branch"), { ssr: false, loading: () => <div className="demo-loading" role="status">Carregando demonstração…</div> }),
   "FUND-0021": dynamic(() => import("@/demos/fundamentals/ficha-de-fossil-com-escala"), { ssr: false, loading: () => <div className="demo-loading" role="status">Carregando demonstração…</div> }),
+  "FUND-0022": dynamic(() => import("@/demos/fundamentals/cartao-de-alergenicos-de-receita"), { ssr: false, loading: () => <div className="demo-loading" role="status">Carregando demonstração…</div> }),
 };
 
 export function PreviewDemo({ id }: { id: string }) { const Component = demos[id as keyof typeof demos]; return Component ? <Component /> : null; }
