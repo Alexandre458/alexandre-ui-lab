@@ -4,8 +4,8 @@ import { useState } from 'react';
 const vaseData = {
   id: 'VASO-001',
   name: 'Vaso Cerâmico do Período Romano',
-  originalImage: '/images/vase-original.jpg',
-  restoredImage: '/images/vase-restored.jpg',
+  originalImage: '/images/vase-original.svg',
+  restoredImage: '/images/vase-restored.svg',
   repairs: [
     { id: 'REP-001', description: 'Restauração da base com argila e resina', location: 'Base', year: 2018 },
     { id: 'REP-002', description: 'Conserto de fissura lateral com adesivo arqueológico', location: 'Lado esquerdo', year: 2020 },
@@ -40,6 +40,7 @@ export default function InspecaoDePecaRestaurada() {
               {/* Imagem principal */}
               <div className="lg:w-1/2 mb-8 lg:mb-0">
                 <div className="relative">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={showRestored ? vaseData.restoredImage : vaseData.originalImage}
                     alt={showRestored ? 'Vaso restaurado' : 'Vaso original'}

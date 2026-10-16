@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" role="img" aria-label="Ilustração do vaso cerâmico restaurado, com remendos claros na base, na lateral e no topo">
+  <rect width="400" height="500" fill="#f4efe6"/>
+  <ellipse cx="200" cy="452" rx="120" ry="18" fill="#d9d2c4"/>
+  <path d="M150 120 C140 180 118 220 118 290 C118 380 150 440 200 440 C250 440 282 380 282 290 C282 220 260 180 250 120 Z" fill="#b98a5e"/>
+  <path d="M150 120 C140 180 118 220 118 290 C118 380 150 440 200 440 C250 440 282 380 282 290 C282 220 260 180 250 120 Z" fill="none" stroke="#8a6540" stroke-width="4"/>
+  <ellipse cx="200" cy="120" rx="50" ry="14" fill="#a3774e" stroke="#8a6540" stroke-width="4"/>
+  <path d="M118 210 C90 215 84 250 112 262" fill="none" stroke="#8a6540" stroke-width="10" stroke-linecap="round"/>
+  <path d="M282 210 C310 215 316 250 288 262" fill="none" stroke="#8a6540" stroke-width="10" stroke-linecap="round"/>
+  <path d="M130 300 C160 312 240 312 270 300" fill="none" stroke="#8a6540" stroke-width="3" opacity="0.6"/>
+  <path d="M126 340 C158 354 242 354 274 340" fill="none" stroke="#8a6540" stroke-width="3" opacity="0.6"/>
+  <path d="M160 400 C170 430 190 440 205 438 L196 404 Z" fill="#e8ddc8" stroke="#6f9bd1" stroke-width="3" stroke-dasharray="6 4"/>
+  <path d="M128 250 C136 276 146 296 160 310 L146 262 Z" fill="#e8ddc8" stroke="#6f9bd1" stroke-width="3" stroke-dasharray="6 4"/>
+  <path d="M232 132 C244 150 250 168 252 186 L226 160 Z" fill="#e8ddc8" stroke="#6f9bd1" stroke-width="3" stroke-dasharray="6 4"/>
+</svg>
